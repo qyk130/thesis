@@ -1,5 +1,12 @@
 \documentclass[12pt,openany,a4paper]{book}
-\usepackage{graphics}	% if you want encapsulated PS figures.
+\usepackage{graphics} % for pdf, bitmapped graphics files
+\usepackage{epsfig} % for postscript graphics files
+\usepackage{mathptmx} % assumes new font selection scheme installed
+\usepackage{times} % assumes new font selection scheme installed
+\usepackage{amsmath} % assumes amsmath package installed
+\usepackage{amssymb}  % assumes amsmath package installed
+\usepackage[export]{adjustbox}
+\usepackage{stfloats}% if you want encapsulated PS figures.
 
 % If you use a macro file called macros.tex :
 % \input{macros}
@@ -321,18 +328,15 @@ In 2017 Neklyudov and Kirill\cite{neklyudov2017performance} introduced Factoriza
 
 \chapter{Theory}
 
-A scientific paper is likely to be read by people who are not
-specialists in the same field as the author(s), but who nevertheless
-may need to use the results of the paper in their own fields.
-Similarly, the examiners of your thesis will probably include at least
-one academic who does not teach or conduct research in the subject
-area of your thesis.  In an early chapter of your thesis, therefore,
-you should quote any theoretical results which are necessary for the
-understanding of later chapters.  Examiners who are not specialists in
-your area will know whether you have given sufficient theoretical
-information.  They will also know whether you have insulted their
-status by presenting material which is familiar to every
-half-competent graduate in every field of ECE.
+\section{Word2Vec}
+There are two ways of implementing Word2vec\cite{mikolov2013efficient}: skip-gram model and negative sampling. Although it was using negative sampling in our implementation, we will explain how it works with skip-gram model, since the theory behind negative sampling is essentially skip-gram model.\\
+We are given a corpus of words $w$ and their contexts $c$ within a window size. Given a corpus $Text$, the goal is to derive the parameters $\theta$ to maximize the corpus probability\cite{goldberg2014word2vec}:\\
+\begin{center}
+$\begin{aligned}
+\arg\max_{\theta}\prod_{(w,c)\in D}p(c|w,\theta)
+\end{aligned}$
+\end{center}
+In our case, a word $w$ is a hero, its context $c$ is its teammates. D is the set of all two-hero pairs in the same team. The corpus are all teams in our trainning data. The window size is 4 since we are certain that a hero interacts with all 4 of its teammates.
 
 \chapter{Methodology, procedure, design, etc.}
 
