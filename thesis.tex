@@ -302,34 +302,82 @@ your thesis, seek advice from your supervisor.
 
 \chapter{Introduction}
 
-Dota2 is one of the most popular online game. It is also the originator of multiplayer online battle arena(MOBA) game. Professional Dota2 tournaments often offer prizes in millions of US dollars in total. There are over 6 millions of players who have played at least one match in February 2017. The popularity also brought a huge amount of data on players and matches. Valve, the developer of Dota2 produces API(Application Programming Interface) for people to access these data.  \\
+Dota2 is one of the most popular online game. It is also the originator of multiplayer online battle arena(MOBA) game. Professional Dota2 tournaments often offer prizes in millions of US dollars in total. The most recent The International tournament has a total prize pool of \$24,787,916\cite{track}.  A predictor of such a game could be further developed to provide strategical analysis to professioanal teams.\\
 
-In a regular game of Dota, there are ten players separated to two sides. Each player can pick one of 113 heroes in the match. Players often play in different roles by convention. Each hero has different attribute and unique abilities which decide what roles it is capable of. When players pick heroes they need to consider the combination of roles and heroes, some powerful hero combos and countering enemies' pick. This is not easy because the game is extremely variable. For example: one hero can often be played as different roles; a certain item may increase a hero's strength or counter an enemy hero dramatically; the relationship between heroes: synergy or counter varies with time.\\
+In a regular game of Dota, there are ten players separated to two sides, ``radiant'' and ``dire''. Each player can pick one of 113 heroes in the match. Players often play in different roles by convention. Each hero has different attribute and unique abilities which decide what roles it is capable of. When players pick heroes they need to consider not just the individual strength of heroes but the interaction between heroes. Some powerful hero combos can greatly affect a team's capability. Countering an ememy hero can also bring huge advantages. Above synergy and countering, the more important part is the balance of a team: while providing different functionality to the team, different roles comsume different amount of resources, and, resources are quite limited in the game. As an example, players don't want to have more than two ``carry'' heroes in the team since they require lots of resources to grow powerful in the late game.\\
 
-An experienced player can often predict the trend or even the result of a match by the composition of both teams --- so called ``draft''. There are certain patterns between the ``draft'' and the result of the match, however, the total amount of the draft of a single team is $\Comb{113}{5}=140364532 $, and the combination of two teams is greater than $1.564\times10^{16}$. The complexity is huge, and machine learning is suitable for solving such a problem.\\
+An experienced player can often predict the trend or even the result of a match by the composition of both teams --- so called ``draft''. There certainly are patterns between the ``draft'' and the result of the match, however, the total amount of the draft of a single team is $\Comb{113}{5}=140364532 $, and the combination of two teams is greater than $1.564\times10^{16}$. The complexity is huge, and machine learning is suitable for solving such a problem.\\
 
-Machine learning learns patterns from a sample to solve problems. It has a variety of uses include credit applications, fraud detection, medical diagnosis, spam filters and many other applications\cite{alpaydin2014introduction}. There are different models for different types of problems. In this case, we have a classification problem. Logistic Regression and Naive Bayes are proposed to solve this problem due to their simplicity and efficiency.
+Formally, our task is that, for given team compositions of radiant and dire, predict whether radiant or dire will win the game.\\
+
+We explored a variety of machine learning algorithms on this task including linear learners like logistic regression and non-linear learners like SVM and neural network. We already know the fact that individual heroes do not contribute to the strength of the team linearly so we hypothesize that non-linear algorithms would have better performance.
 
 \chapter{Literature review / prior art}
 
-Dota2 has drawn a fair amount of attention of machine learning researchers in the last few years due to its complexity and popularity. \\
+Dota2 has drawn a fair amount of attention of student researchers in the last few years due to its popularity. \\
 	
-In 2013 Conley and Perry presented a hero recommendation engine depends on the opposite draft\cite{conley2013does}. They performed Logistic Regression and K-Nearest Neighbors on the draft information of a certain amount of matches. They achieved 69.8\% accuracy with Logistic Regression on 18,000 matches, however, it couldn't learn from the relationships between heroes. To attempt solving that issue they used K-Nearest Neighbors with custom weights for neighbors with 2-fold cross-validation on 20,000 matches. Their best accuracy with 4 dimensions got 67.43\% accuracy. The recommendation engine was built on these approaches. Their work was the first to use the draft information to predict Dota2 games result, but a linear model like Logistic Regression or simple model like K-Nearest Neighbors can not capture the interaction between heroes.\\
+\section{How Does He Saw Me?
+A Recommendation Engine for Picking Heroes in
+Dota 2}
 
-In 2014 Agarwala and Pearce studied how win rate depends on the draft by performing Logistic Regression with the draft directly, second order polynomial of PCA scores and PCA sorted by the first PCA component respectively on 1500 matches \cite{agarwala2014learning}. They selected some features to describe a hero's role by normalizing the average hero statistics. Then PCA was run on the average statistics of professional play. The result indicated that the PCA with draft models failed to match the accuracy of the pure draft model. The authors hypothesized that average hero stats are not so informative since one hero can play different roles. Their PCA score was based on professional play but they trained on public matches. Professional matches and public matches are very different and shouldn't be mixed, which should be another reason.\\
+In 2013 Conley and Perry\cite{conley2013does} presented a hero recommendation engine depends on the opposite draft. They performed Logistic Regression and K-Nearest Neighbors on the draft information of a certain amount of matches. They achieved 69.8\% accuracy with Logistic Regression on 18,000 matches, however, it couldn't learn from the relationships between heroes. To attempt solving that issue they used K-Nearest Neighbors with custom weights for neighbors with 2-fold cross-validation on 20,000 matches. Their best accuracy with 4 dimensions got 67.43\% accuracy. The recommendation engine was built on these approaches. Their work was the first to use the draft information to predict Dota2 games result, but a linear model like Logistic Regression or simple model like K-Nearest Neighbors can not capture the interaction between heroes.\\
 
-In 2015 Song et al.\cite{song2015predicting}. tried to use Logistic Regression to predict the winning side of Dota2 based on the draft. After discovering that only draft information is not enough to train a precise model, they attempted to add features based on powerful 2-hero combos using stepwise regression and the result was slightly better. They mentioned that the information of player should increase the model's accuracy in the conclusion.\\
+\section{Learning Dota 2 Team Compositions}
 
- In the same year Kinkade et al.\cite{kinkade2015dota} presented two classifiers to predicts the winning team of Dota2. One uses post game data, which performed perfectly but does not hold any real use. The other one uses pre-game draft information. The authors used Logistic Regression with several manually inserted features such as matchup, synergy and countering between heroes and they used Random Forest with only draft information. Logistic Regression got only 56\% accuracy with draft information itself and the features increases the model's quality to up to 73\%. For random forest, the authors found that overfitting was a large issue. They got 99\% accuracy on the training set while they only got 67\% accuracy on the testing set after several parameters verified. Logistic Regression performed significantly better. The authors hypothesized that the players' skill contributes almost linearly to the game so a linear model would fit better.\\
+In 2014 Agarwala and Pearce \cite{agarwala2014learning} studied how win rate depends on the draft by performing Logistic Regression with the draft directly, second order polynomial of PCA scores and PCA sorted by the first PCA component respectively on 1500 public matches. \\
 
-In 2016 Yang et al.\cite{yang2016real} predict the winning team of a Dota2 match using prior and real-time data. The authors constructed a feature set covers more aspects including hero, player and hero-player combination as prior features and other real-time match stats as real-time features. They used Logistic Regression, neural network and the proposed Attribute Sequence Model and their combinations on prior features, and both prior and real-time features. For the prior game prediction, the result shows that using all features achieves the highest prediction accuracy 71.49\%. For the real-time prediction, the results show that prior features' impact on the prediction drops over time while the real-time's increases. The idea of using the combination of information of hero and player is impressive. \\
+They selected some features to describe a hero's role by normalizing the average hero statistics at the end of the game. Then PCA was run on the average statistics of data from professional play. They then encoded hero drafts by PCA scores derived from professional matches and then use them as input of logistic regression.\\
 
+The result indicated that the PCA models failed to match the accuracy of the pure draft model. The authors hypothesized that average hero stats are not so informative since one hero can play different roles. Their PCA score was based on professional play but they trained on public matches. Professional matches and public matches are very different, which should be another reason.\\
+
+\section{Predicting the winning side of DotA2}
+In 2015 Song et al.\cite{song2015predicting}. tried to use Logistic Regression to predict the winning side of Dota2 based on the draft on 3000 public matches. After realizing that there exists correlation between heroes they attempted to extract features on powerful 2-hero combos based on their knowledge of the game, resulted in better performance. They were also the first to include hero interactions in the prediction.\\ 
+
+The authors believed that many features are not contributing much predicting power so they selected a subset of features using stepwise regression and the result was slightly better. In the conclusion, they hypothesized that the past history of players should increase the model's accuracy.\\
+
+\section{DOTA 2 Win Prediction} 
+In 2015 Kinkade et al.\cite{kinkade2015dota} presented two classifiers to predicts the winning team of Dota2.  One uses post game data, which performed perfectly but does not hold any real use. The other one uses pre-game draft information. The dataset consists of 62,000 matches from `very high' skill level. The authors used Logistic Regression with team composition, synergy and countering and they used Random Forest with only team composition. Logistic Regression got only 56\% accuracy with draft information itself and the features increases the model's accuracy to 73\%. For random forest, the authors found that overfitting was a large issue. They got 99\% accuracy on the training set while they only got 67\% accuracy on the testing set after several parameters verified. Logistic Regression performed significantly better. The authors hypothesized that the players' skill contributes almost linearly to the game so a linear model would fit better.\\
+
+\section{Real-time eSports Match Result Prediction}
+In 2016 Yang et al.\cite{yang2016real} predict the winning team of a Dota2 match using pre-game data and real-time data. The authors constructed a feature set covering aspects including hero, player and hero-player combination as prior features and other real-time match stats as real-time features. The biggest difference comparing to other researches is that they selected features from players' past history to estimate their performance. They used Logistic Regression, neural network and the proposed Attribute Sequence Model and their combinations on pre-game features, and both pre-game and real-time features. For the prior game prediction, the result shows that using all features achieves the highest prediction accuracy 71.49\%. For the real-time prediction, the results show that prior features' impact on the prediction drops over time while the real-time's increases. \\
+
+\section{Performance of Machine Learning Algorithms in Predicting Game Outcome from Drafts in Dota 2}
 In 2017 Neklyudov and Kirill\cite{neklyudov2017performance} introduced Factorization Machines and Gradient Boosted Decision Trees for the prediction of Dota2 match with comparison to the models previously used by other researchers including Logistic Regression and Naive Bayes. The authors collected over 5 million matches from different game modes and skill levels. Then hero drafts were used as input of algorithms. The result indicated that Factorization Machines and Gradient Boosted Decision Trees performs better than other machine learning methods with the accuracy of 70.6\% and 70.1\% respectively in normal skill level. The authors also compared the performance of Gradient Boosted Decision Trees with and without role information and it performed constantly. The authors hypothesized that the algorithm somehow learned the features of heroes' roles so the additional information of roles did not impact much.
+
+\section{overview}
+
+Most of the past researches have modeled team compositions as one-hot encoding of heroes. An obvious drawback is that, there are 113 heroes(fewer when some researches are committed) and 112 components of a single encoding representing a hero would be meaningless. The encoding only carry information abount whether a hero exists in a team or not but not characteristics of a hero. It would be much easier to model hero interactions if there is a better encoding methods.\\
+
+The researches which involves hero interactions modeled them as second-order features. The authors either select them based on their own knowledge, or from third-party Dota2 data analyzing websites. However, reliability was an issue if selecting features from players' knowledge. Also, third-party websites analyze on a large portion of whole population of Dota2 data, selecting features from them would very likely to violate the separability between train and test data.\\
+
+Our contribution is:
+\begin{description}
+  \item[$\bullet$ ] Model hero interactions in form of association rules and to mine them only from train data.
+  \item[$\bullet$ ] To use Word2Vec as an encoding method of team composition. And a convolutional neural network (CNN) based classifier using team composition vectorized by Word2Vec as input.
+\end{description}
+
+\chapter{Dataset}
+Our dataset consists of 200,000 ranked matches gathered by API provided by Valve. We put some constraints on data in order to make sure the quality of data:\\
+\begin{description}
+  \item[$\bullet$ ] There match must not have been abandoned. The team with people abandoned is significantly disadvantaged since they would be outnumbered by the opponent.
+  \item[$\bullet$ ] The match must last at least 10 minutes. Matches finished in 10 minutes could likely be lost intentionally.
+  \item[$\bullet$ ] The skill level is `very high'. Players at different level play differently. The upper bound and lower bound of performance of  `very high' level players are likely to be tighter. However, past researches also indicate that they are harder to predict.
+  \item[$\bullet$ ] The game mode is `ranked' where people really try hard to win in order to increase their rank. There are likely to be more team cooperation and serious strategies in ranked game.
+  \end{description}
+
+  Data are split randomly into training set, validation set and test set in ratio of $75\%:12.5\%:12.5\%$
+  
 
 \chapter{Theory}
 
+Here we list some background knowledge which will be required in the next part but might not be common knowledge of machine learning researchers.
 \section{Word2Vec}
-There are two ways of implementing Word2vec\cite{mikolov2013efficient}: skip-gram model and negative sampling. Although it was using negative sampling in our implementation, we will explain how it works with skip-gram model, since the theory behind negative sampling is essentially skip-gram model.\\
+There are two ways of implementing Word2Vecec\cite{mikolov2013efficient}: skip-gram model and negative sampling. Although it was using negative sampling in our implementation, we will explain how it works with skip-gram model, since the theory behind negative sampling is essentially skip-gram model.\\
+
+Intuitively, Word2Vec generates word embeddings by achieving a `fake task'. In skip-gram model, the fake task is to train a MLP to predict the probability distribution of a word's context given the word. If such MLP achived this task, it means the hidden layer contains sufficient information about how this specific word interact with others and the hidden layer can work as the word's embedding.\\
+
+To give a more formal definition. \\
+
 We are given a corpus of words $w$ and their contexts $c$ within a window size. Given a corpus $Text$, the goal is to derive the parameters $\theta$ to maximize the corpus probability\cite{goldberg2014word2vec}:\\
 \begin{center}
 $\begin{aligned}
