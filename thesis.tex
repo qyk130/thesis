@@ -371,6 +371,13 @@ Our dataset consists of 200,000 ranked matches gathered by API provided by Valve
 \chapter{Theory}
 
 Here we list some background knowledge which will be required in the next part but might not be common knowledge of machine learning researchers.
+
+\section{Convolutional Neural Network}
+
+ Convolutional neural network(CNN) is a neural network architecture that expertise in extracting local features to recognize spatial or temporal objects\cite{lecun1995convolutional}. A CNN classifier usually consists of convolution layers, pooling layers and fully connected layers.\\
+
+All neurons in a fully connected layer are connected to all input and out put as normal neural network does.   
+
 \section{Word2Vec}
 There are two ways of implementing Word2Vecec\cite{mikolov2013efficient}: skip-gram model and negative sampling. Although it was using negative sampling in our implementation, we will explain how it works with skip-gram model, since the theory behind negative sampling is essentially skip-gram model.\\
 
