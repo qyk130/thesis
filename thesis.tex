@@ -371,15 +371,8 @@ Our dataset consists of 200,000 ranked matches gathered by API provided by Valve
 \chapter{Theory}
 
 Here we list some background knowledge which will be required in the next part but might not be common knowledge of machine learning researchers.
-
-\section{Convolutional Neural Network}
-
- Convolutional neural network(CNN) is a neural network architecture that expertise in extracting local features to recognize spatial or temporal objects\cite{lecun1995convolutional}. A CNN classifier usually consists of convolution layers, pooling layers and fully connected layers.\\
-
-All neurons in a fully connected layer are connected to all input and out put as normal neural network does.   
-
 \section{Word2Vec}
-There are two ways of implementing Word2Vecec\cite{mikolov2013efficient}: skip-gram model and negative sampling. Although it was using negative sampling in our implementation, we will explain how it works with skip-gram model, since the theory behind negative sampling is essentially skip-gram model.\\
+There are two ways of implementing Word2Vec\cite{mikolov2013efficient}: skip-gram model and negative sampling. Although it was using negative sampling in our implementation, we will explain how it works with skip-gram model, since the theory behind negative sampling is essentially skip-gram model.\\
 
 Intuitively, Word2Vec generates word embeddings by achieving a `fake task'. In skip-gram model, the fake task is to train a MLP to predict the probability distribution of a word's context given the word. If such MLP achived this task, it means the hidden layer contains sufficient information about how this specific word interact with others and the hidden layer can work as the word's embedding.\\
 
@@ -391,7 +384,21 @@ $\begin{aligned}
 \arg\max_{\theta}\prod_{(w,c)\in D}p(c|w,\theta)
 \end{aligned}$
 \end{center}
-In our case, a word $w$ is a hero, its context $c$ is its teammates. D is the set of all two-hero pairs in the same team. The corpus are all teams in our trainning data. The window size is 4 since we are certain that a hero interacts with all 4 of its teammates.
+
+
+\section{Convolutional Neural Network}
+
+Convolutional neural network(CNN) is a neural network architecture that expertise in extracting local features to recognize spatial or temporal objects\cite{lecun1995convolutional}. A CNN classifier usually consists of convolution layers, pooling layers, and fully connected layers. \\
+
+All neurons in a fully connected layer are connected to all input and output as normal neural network does. At each convolutional layer, input will go through “filters” with  a shared weight similar to animal vision neural system. Then, a pooling layer will choose the most significant feature in a range.\\
+
+\begin{figure}[htbp]
+\centerline{\includegraphics{conv.png}}
+\caption{LeNet(the first convolutional neural netowrk) architecture\cite{lecun1995convolutional}}
+\label{flr1}
+\end{figure}
+
+Convolutional neural network works expertise in extracting features from data with spatial or temporal pattern, usually image or text. 
 
 \chapter{Methodology, procedure, design, etc.}
 
