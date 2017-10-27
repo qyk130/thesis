@@ -352,12 +352,12 @@ The researches which involves hero interactions modeled them as second-order fea
 
 Our contribution is:
 \begin{description}
-  \item[$\bullet$ ] Model hero interactions in form of association rules and to mine them only from train data.
+  \item[$\bullet$ ] To mine hero interactions only from train data.
   \item[$\bullet$ ] To use Word2Vec as an encoding method of team composition. And a convolutional neural network (CNN) based classifier using team composition vectorized by Word2Vec as input.
 \end{description}
 
 \chapter{Dataset}
-Our dataset consists of 200,000 ranked matches gathered by API provided by Valve. We put some constraints on data in order to make sure the quality of data:\\
+Our dataset consists of 200,000 ranked matches gathered by API provided by Valve. We put some constraints on data in order to ensure the quality:\\
 \begin{description}
   \item[$\bullet$ ] There match must not have been abandoned. The team with people abandoned is significantly disadvantaged since they would be outnumbered by the opponent.
   \item[$\bullet$ ] The match must last at least 10 minutes. Matches finished in 10 minutes could likely be lost intentionally.
@@ -365,7 +365,7 @@ Our dataset consists of 200,000 ranked matches gathered by API provided by Valve
   \item[$\bullet$ ] The game mode is `ranked' where people really try hard to win in order to increase their rank. There are likely to be more team cooperation and serious strategies in ranked game.
   \end{description}
 
-  Data are split randomly into training set, validation set and test set in ratio of $75\%:12.5\%:12.5\%$
+  Data are split randomly into training set, validation set and test set in ratio of $75\%:12.5\%:12.5\%$ for all methods used.
   
 
 \chapter{Theory}
@@ -398,16 +398,63 @@ All neurons in a fully connected layer are connected to all input and output as 
 \label{flr1}
 \end{figure}
 
-Convolutional neural network works expertise in extracting features from data with spatial or temporal pattern, usually image or text. 
+Convolutional neural network expertises in extracting features from data with spatial or temporal pattern, usually image or text. 
 
 \section{Adam}
 
-Kingma et al.\cite{kingmaadam} proposed Adaptive Moment Estimation(Adam), a stochastic gradient based optimization algorithm at 2015. Adam calculates adaptive learning rates for each parameter based on estimates of first and second moments of the gradients.
+Kingma et al.\cite{kingmaadam} proposed Adaptive Moment Estimation(Adam), a stochastic gradient based optimization algorithm at 2015. Adam calculates adaptive learning rates for each parameter based on estimates of first and second moments of the gradients $g_{t}$ with decaying constants $\beta_{1}$ and $\beta_{2}$.
 
-\chapter{Methodology, procedure, design, etc.}
+\begin{center}
+$\begin{aligned}
+m_{t}=\beta_{1}m_{t-1}+(1-\beta_{1})g_{t}\\
+v_{t}=\beta_{2}v_{t-1}+(1-\beta_{1})g^{2}_{t} 
+\end{aligned}$
+\end{center}
+Where $m_{t}$ is the estimate of first moment of gradiant and $v_{t}$ is the estimate of second moment. These two estimates are very biased toward zero at start(when $t$ is low) since $m_{0}$ and $v_{0}$ are initialized to 0.\\
+The authors proposed bias-corrected estimates to counter the bias:
+\begin{center}
+$\begin{aligned}
+\hat{m}_{t}=\frac{m_{t}}{1-\beta^{t}_{1}}\\
+\hat{v}_{t}=\frac{v_{t}}{1-\beta^{t}_{2}}
+\end{aligned}$
+\end{center}
+Then, these estimates are used to update the parameters $\theta_{t}$, similar to Adadelta and RMSprop:
+\begin{center}
+$\begin{aligned}
+\theta_{t}=\theta{t-1}-\alpha\cdot\hat{m}_{t}/(\sqrt{\hat{v_{t}}+\epsilon})
+\end{aligned}$
+\end{center}
 
-This may be one chapter or several.  Again, titles should be more
-informative than the above.
+Where $\alpha$ is a hyperparameter which aproximately bound the stepsize. The update continues untill parameters converges.
+\chapter{Logistic Regression with hero interaction features}
+
+Logistic Regression estimates the probability of a binary output from independent input variables using a logistic function. However, as discussed before, we know heroes correlate with each others. A hero's strength is significantly affected by it's teammates and enemies. We model this correlation as two-hero interactions.
+
+The input are the concatenation of the following vectors: 
+\begin{description}
+  \item[$\bullet$] a one-hot encoding vectors of team composition both teams.
+  \item[$\bullet$] a vector representing existing synergy interactions of both teams.
+  \item[$\bullet$] a vector representing exsisting counter interactions of both teams.
+\end{description}
+
+\section{Team composition}
+There are 113 heroes in Dota2 currently, with 2 teams, team composition can be represented as a feature vector $x\in\mathbb{R}_{226}$
+\[
+	x_{i}=\begin{cases}
+			1 $ if a hero with id $i$ is in the radiant team,$\\
+			0
+	    \end{cases}
+\]	
+\[
+	x_{i+113}=\begin{cases}
+			1 $ if a hero with id $i$ is in the dire team,$\\
+			0
+	    \end{cases}
+\]	
+
+\section{Synergy}
+
+
 
 You will almost certainly need diagrams to clarify your meaning.  The
 \LaTeXe\ \texttt{graphics} package allows the inclusion of PostScript
